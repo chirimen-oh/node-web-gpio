@@ -14,7 +14,7 @@ async function main() {
   await port.export("out");
 
   for (;;) {
-    port.write(value);
+    await port.write(value);
     await new Promise(resolve => setTimeout(resolve, 1e3));
   }
 }
