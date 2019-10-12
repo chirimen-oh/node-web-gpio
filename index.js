@@ -1,0 +1,142 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const events_1 = require("events");
+const fs_1 = require("fs");
+/**
+ * Interval of file system polling, in milliseconds.
+ */
+const PollingInterval = 100;
+const Uint16Max = 65535;
+function parseUint16(string) {
+    const n = Number.parseInt(string, 10);
+    if (0 <= n && n <= Uint16Max)
+        return n;
+    else
+        throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
+}
+class GPIOAccess extends events_1.EventEmitter {
+    constructor(ports) {
+        super();
+        this._ports = ports == null ? new GPIOPortMap() : ports;
+        this._ports.forEach(port => port.on("change", value => {
+            const event = { value, port };
+            this.emit("change", event);
+        }));
+        this.on("change", (event) => {
+            if (this.onchange !== undefined)
+                this.onchange(event);
+        });
+    }
+    get ports() {
+        return this._ports;
+    }
+    /**
+     * Unexport all exported GPIO ports.
+     */
+    async unexportAll() {
+        await Promise.all([...this.ports.values()].map(port => port.exported ? port.unexport() : undefined));
+    }
+}
+exports.GPIOAccess = GPIOAccess;
+class GPIOPortMap extends Map {
+}
+exports.GPIOPortMap = GPIOPortMap;
+class GPIOPort extends events_1.EventEmitter {
+    constructor(portNumber) {
+        super();
+        this._portNumber = portNumber;
+        this._pollingInterval = PollingInterval;
+        this._direction = new OperationError("Unknown direction.");
+        this._exported = new OperationError("Unknown export.");
+        this.on("change", (value) => {
+            if (this.onchange !== undefined)
+                this.onchange(value);
+        });
+    }
+    get portNumber() {
+        return this._portNumber;
+    }
+    get portName() {
+        // NOTE: Unknown portName.
+        return "";
+    }
+    get pinName() {
+        // NOTE: Unknown pinName.
+        return "";
+    }
+    get direction() {
+        if (this._direction instanceof OperationError)
+            throw this._direction;
+        return this._direction;
+    }
+    get exported() {
+        if (this._exported instanceof OperationError)
+            throw this._exported;
+        return this._exported;
+    }
+    async export(direction) {
+        if (!/^(in|out)$/.test(direction)) {
+            throw new InvalidAccessError(`Must be "in" or "out".`);
+        }
+        try {
+            clearInterval(this._timeout);
+            await fs_1.promises.writeFile(`/sys/class/gpio/export`, parseUint16(this.portNumber.toString()).toString());
+            await fs_1.promises.writeFile(`/sys/class/gpio/${parseUint16(this.portNumber.toString())}/direction`, direction);
+            if (direction === "in") {
+                this._timeout = setInterval(this.read.bind(this), this._pollingInterval);
+            }
+        }
+        catch (error) {
+            throw new OperationError(error);
+        }
+        this._direction = direction;
+        this._exported = true;
+    }
+    async unexport() {
+        clearInterval(this._timeout);
+        try {
+            await fs_1.promises.writeFile(`/sys/class/gpio/unexport`, parseUint16(this.portNumber.toString()).toString());
+        }
+        catch (error) {
+            throw new OperationError(error);
+        }
+        this._exported = false;
+    }
+    async read() {
+        try {
+            const buffer = await fs_1.promises.readFile(`/sys/class/gpio/${parseUint16(this.portNumber.toString())}/value`);
+            const value = parseUint16(buffer.toString());
+            if (this._value !== value) {
+                this._value = value;
+                this.emit("change", value);
+            }
+            return value;
+        }
+        catch (error) {
+            throw new OperationError(error);
+        }
+    }
+    async write(value) {
+        try {
+            await fs_1.promises.writeFile(`/sys/class/gpio/${parseUint16(this.portNumber.toString())}/value`, parseUint16(value.toString()).toString());
+        }
+        catch (error) {
+            throw new OperationError(error);
+        }
+    }
+}
+exports.GPIOPort = GPIOPort;
+class InvalidAccessError extends Error {
+}
+exports.InvalidAccessError = InvalidAccessError;
+class OperationError extends Error {
+}
+exports.OperationError = OperationError;
+async function requestGPIOAccess() {
+    const ports = new GPIOPortMap([...Array(Uint16Max + 1).keys()].map(portNumber => [
+        portNumber,
+        new GPIOPort(portNumber)
+    ]));
+    return new GPIOAccess(ports);
+}
+exports.requestGPIOAccess = requestGPIOAccess;
