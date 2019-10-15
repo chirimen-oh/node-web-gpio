@@ -1,10 +1,13 @@
 import { EventEmitter } from "events";
 import { promises as fs } from "fs";
+import * as path from "path";
 
 /**
  * Interval of file system polling, in milliseconds.
  */
 const PollingInterval = 100;
+
+const SysfsGPIOPath = "/sys/class/gpio";
 
 const Uint16Max = 65535;
 
@@ -128,10 +131,22 @@ export class GPIOPort extends EventEmitter {
     }
 
     try {
+      await fs.access(path.join(SysfsGPIOPath, `gpio${this.portNumber}`));
+      this._exported = true;
+    } catch {
+      this._exported = false;
+    }
+
+    try {
       clearInterval(this._timeout as any);
-      await fs.writeFile(`/sys/class/gpio/export`, String(this.portNumber));
+      if (!this.exported) {
+        await fs.writeFile(
+          path.join(SysfsGPIOPath, "export"),
+          String(this.portNumber)
+        );
+      }
       await fs.writeFile(
-        `/sys/class/gpio/gpio${this.portNumber}/direction`,
+        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "direction"),
         direction
       );
       if (direction === "in") {
@@ -152,7 +167,10 @@ export class GPIOPort extends EventEmitter {
     clearInterval(this._timeout as any);
 
     try {
-      await fs.writeFile(`/sys/class/gpio/unexport`, String(this.portNumber));
+      await fs.writeFile(
+        path.join(SysfsGPIOPath, "unexport"),
+        String(this.portNumber)
+      );
     } catch (error) {
       throw new OperationError(error);
     }
@@ -161,9 +179,15 @@ export class GPIOPort extends EventEmitter {
   }
 
   async read() {
+    if (!(this.exported && this.direction === "in")) {
+      throw new InvalidAccessError(
+        `The exported must be true and value of direction must be "in".`
+      );
+    }
+
     try {
       const buffer = await fs.readFile(
-        `/sys/class/gpio/gpio${this.portNumber}/value`
+        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value")
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
@@ -180,9 +204,15 @@ export class GPIOPort extends EventEmitter {
   }
 
   async write(value: GPIOValue) {
+    if (!(this.exported && this.direction === "out")) {
+      throw new InvalidAccessError(
+        `The exported must be true and value of direction must be "out".`
+      );
+    }
+
     try {
       await fs.writeFile(
-        `/sys/class/gpio/gpio${this.portNumber}/value`,
+        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value"),
         parseUint16(value.toString()).toString()
       );
     } catch (error) {
