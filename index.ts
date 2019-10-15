@@ -134,7 +134,9 @@ export class GPIOPort extends EventEmitter {
         parseUint16(this.portNumber.toString()).toString()
       );
       await fs.writeFile(
-        `/sys/class/gpio/${parseUint16(this.portNumber.toString())}/direction`,
+        `/sys/class/gpio/gpio${parseUint16(
+          this.portNumber.toString()
+        )}/direction`,
         direction
       );
       if (direction === "in") {
@@ -169,7 +171,7 @@ export class GPIOPort extends EventEmitter {
   async read() {
     try {
       const buffer = await fs.readFile(
-        `/sys/class/gpio/${parseUint16(this.portNumber.toString())}/value`
+        `/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
@@ -188,7 +190,7 @@ export class GPIOPort extends EventEmitter {
   async write(value: GPIOValue) {
     try {
       await fs.writeFile(
-        `/sys/class/gpio/${parseUint16(this.portNumber.toString())}/value`,
+        `/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`,
         parseUint16(value.toString()).toString()
       );
     } catch (error) {
