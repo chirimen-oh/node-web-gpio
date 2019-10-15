@@ -6,6 +6,8 @@ GPIO access with Node.js
 
 ```js
 const { requestGPIOAccess } = require("@notweb/gpio");
+const { promisify } = require("util");
+const sleep = promisify(setTimeout);
 
 async function main() {
   const gpioAccess = await requestGPIOAccess();
@@ -14,8 +16,10 @@ async function main() {
   await port.export("out");
 
   for (;;) {
-    await port.write(value);
-    await new Promise(resolve => setTimeout(resolve, 1e3));
+    await port.write(1);
+    await sleep(1000);
+    await port.write(0);
+    await sleep(1000);
   }
 }
 
