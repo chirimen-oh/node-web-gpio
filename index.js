@@ -8,6 +8,7 @@ const path = require("path");
  */
 const PollingInterval = 100;
 const SysfsGPIOPath = "/sys/class/gpio";
+const GPIOPortMapSizeMax = 1023;
 const Uint16Max = 65535;
 function parseUint16(string) {
     const n = Number.parseInt(string, 10);
@@ -150,7 +151,7 @@ class OperationError extends Error {
 }
 exports.OperationError = OperationError;
 async function requestGPIOAccess() {
-    const ports = new GPIOPortMap([...Array(Uint16Max + 1).keys()].map(portNumber => [
+    const ports = new GPIOPortMap([...Array(GPIOPortMapSizeMax + 1).keys()].map(portNumber => [
         portNumber,
         new GPIOPort(portNumber)
     ]));
