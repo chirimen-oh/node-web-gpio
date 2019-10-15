@@ -28,6 +28,9 @@ export declare class GPIOAccess extends EventEmitter {
      */
     unexportAll(): Promise<void>;
 }
+/**
+ * Different from Web GPIO API specification.
+ */
 export declare class GPIOPortMap extends Map<PortNumber, GPIOPort> {
 }
 export declare class GPIOPort extends EventEmitter {

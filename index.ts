@@ -79,6 +79,9 @@ export class GPIOAccess extends EventEmitter {
   }
 }
 
+/**
+ * Different from Web GPIO API specification.
+ */
 export class GPIOPortMap extends Map<PortNumber, GPIOPort> {}
 
 export class GPIOPort extends EventEmitter {

@@ -41,6 +41,9 @@ class GPIOAccess extends events_1.EventEmitter {
     }
 }
 exports.GPIOAccess = GPIOAccess;
+/**
+ * Different from Web GPIO API specification.
+ */
 class GPIOPortMap extends Map {
 }
 exports.GPIOPortMap = GPIOPortMap;
