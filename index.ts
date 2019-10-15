@@ -88,7 +88,7 @@ export class GPIOPort extends EventEmitter {
   constructor(portNumber: PortNumber) {
     super();
 
-    this._portNumber = portNumber;
+    this._portNumber = parseUint16(portNumber.toString());
     this._pollingInterval = PollingInterval;
     this._direction = new OperationError("Unknown direction.");
     this._exported = new OperationError("Unknown export.");
@@ -129,14 +129,9 @@ export class GPIOPort extends EventEmitter {
 
     try {
       clearInterval(this._timeout as any);
+      await fs.writeFile(`/sys/class/gpio/export`, String(this.portNumber));
       await fs.writeFile(
-        `/sys/class/gpio/export`,
-        parseUint16(this.portNumber.toString()).toString()
-      );
-      await fs.writeFile(
-        `/sys/class/gpio/gpio${parseUint16(
-          this.portNumber.toString()
-        )}/direction`,
+        `/sys/class/gpio/gpio${this.portNumber}/direction`,
         direction
       );
       if (direction === "in") {
@@ -157,10 +152,7 @@ export class GPIOPort extends EventEmitter {
     clearInterval(this._timeout as any);
 
     try {
-      await fs.writeFile(
-        `/sys/class/gpio/unexport`,
-        parseUint16(this.portNumber.toString()).toString()
-      );
+      await fs.writeFile(`/sys/class/gpio/unexport`, String(this.portNumber));
     } catch (error) {
       throw new OperationError(error);
     }
@@ -171,7 +163,7 @@ export class GPIOPort extends EventEmitter {
   async read() {
     try {
       const buffer = await fs.readFile(
-        `/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`
+        `/sys/class/gpio/gpio${this.portNumber}/value`
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
@@ -190,7 +182,7 @@ export class GPIOPort extends EventEmitter {
   async write(value: GPIOValue) {
     try {
       await fs.writeFile(
-        `/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`,
+        `/sys/class/gpio/gpio${this.portNumber}/value`,
         parseUint16(value.toString()).toString()
       );
     } catch (error) {

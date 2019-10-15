@@ -44,7 +44,7 @@ exports.GPIOPortMap = GPIOPortMap;
 class GPIOPort extends events_1.EventEmitter {
     constructor(portNumber) {
         super();
-        this._portNumber = portNumber;
+        this._portNumber = parseUint16(portNumber.toString());
         this._pollingInterval = PollingInterval;
         this._direction = new OperationError("Unknown direction.");
         this._exported = new OperationError("Unknown export.");
@@ -80,8 +80,8 @@ class GPIOPort extends events_1.EventEmitter {
         }
         try {
             clearInterval(this._timeout);
-            await fs_1.promises.writeFile(`/sys/class/gpio/export`, parseUint16(this.portNumber.toString()).toString());
-            await fs_1.promises.writeFile(`/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/direction`, direction);
+            await fs_1.promises.writeFile(`/sys/class/gpio/export`, String(this.portNumber));
+            await fs_1.promises.writeFile(`/sys/class/gpio/gpio${this.portNumber}/direction`, direction);
             if (direction === "in") {
                 this._timeout = setInterval(this.read.bind(this), this._pollingInterval);
             }
@@ -95,7 +95,7 @@ class GPIOPort extends events_1.EventEmitter {
     async unexport() {
         clearInterval(this._timeout);
         try {
-            await fs_1.promises.writeFile(`/sys/class/gpio/unexport`, parseUint16(this.portNumber.toString()).toString());
+            await fs_1.promises.writeFile(`/sys/class/gpio/unexport`, String(this.portNumber));
         }
         catch (error) {
             throw new OperationError(error);
@@ -104,7 +104,7 @@ class GPIOPort extends events_1.EventEmitter {
     }
     async read() {
         try {
-            const buffer = await fs_1.promises.readFile(`/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`);
+            const buffer = await fs_1.promises.readFile(`/sys/class/gpio/gpio${this.portNumber}/value`);
             const value = parseUint16(buffer.toString());
             if (this._value !== value) {
                 this._value = value;
@@ -118,7 +118,7 @@ class GPIOPort extends events_1.EventEmitter {
     }
     async write(value) {
         try {
-            await fs_1.promises.writeFile(`/sys/class/gpio/gpio${parseUint16(this.portNumber.toString())}/value`, parseUint16(value.toString()).toString());
+            await fs_1.promises.writeFile(`/sys/class/gpio/gpio${this.portNumber}/value`, parseUint16(value.toString()).toString());
         }
         catch (error) {
             throw new OperationError(error);
