@@ -1,6 +1,6 @@
 {
   "name": "@notweb/gpio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GPIO access with Node.js",
   "main": "index.js",
   "repository": {
