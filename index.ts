@@ -111,8 +111,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   get portName(): PortName {
-    // NOTE: Unknown portName.
-    return "";
+    return `gpio${this.portNumber}`;
   }
 
   get pinName(): PinName {
@@ -136,7 +135,7 @@ export class GPIOPort extends EventEmitter {
     }
 
     try {
-      await fs.access(path.join(SysfsGPIOPath, `gpio${this.portNumber}`));
+      await fs.access(path.join(SysfsGPIOPath, this.portName));
       this._exported = true;
     } catch {
       this._exported = false;
@@ -151,7 +150,7 @@ export class GPIOPort extends EventEmitter {
         );
       }
       await fs.writeFile(
-        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "direction"),
+        path.join(SysfsGPIOPath, this.portName, "direction"),
         direction
       );
       if (direction === "in") {
@@ -192,7 +191,7 @@ export class GPIOPort extends EventEmitter {
 
     try {
       const buffer = await fs.readFile(
-        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value")
+        path.join(SysfsGPIOPath, this.portName, "value")
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
@@ -217,7 +216,7 @@ export class GPIOPort extends EventEmitter {
 
     try {
       await fs.writeFile(
-        path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value"),
+        path.join(SysfsGPIOPath, this.portName, "value"),
         parseUint16(value.toString()).toString()
       );
     } catch (error) {

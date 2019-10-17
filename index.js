@@ -63,8 +63,7 @@ class GPIOPort extends events_1.EventEmitter {
         return this._portNumber;
     }
     get portName() {
-        // NOTE: Unknown portName.
-        return "";
+        return `gpio${this.portNumber}`;
     }
     get pinName() {
         // NOTE: Unknown pinName.
@@ -85,7 +84,7 @@ class GPIOPort extends events_1.EventEmitter {
             throw new InvalidAccessError(`Must be "in" or "out".`);
         }
         try {
-            await fs_1.promises.access(path.join(SysfsGPIOPath, `gpio${this.portNumber}`));
+            await fs_1.promises.access(path.join(SysfsGPIOPath, this.portName));
             this._exported = true;
         }
         catch {
@@ -96,7 +95,7 @@ class GPIOPort extends events_1.EventEmitter {
             if (!this.exported) {
                 await fs_1.promises.writeFile(path.join(SysfsGPIOPath, "export"), String(this.portNumber));
             }
-            await fs_1.promises.writeFile(path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "direction"), direction);
+            await fs_1.promises.writeFile(path.join(SysfsGPIOPath, this.portName, "direction"), direction);
             if (direction === "in") {
                 this._timeout = setInterval(this.read.bind(this), this._pollingInterval);
             }
@@ -122,7 +121,7 @@ class GPIOPort extends events_1.EventEmitter {
             throw new InvalidAccessError(`The exported must be true and value of direction must be "in".`);
         }
         try {
-            const buffer = await fs_1.promises.readFile(path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value"));
+            const buffer = await fs_1.promises.readFile(path.join(SysfsGPIOPath, this.portName, "value"));
             const value = parseUint16(buffer.toString());
             if (this._value !== value) {
                 this._value = value;
@@ -139,7 +138,7 @@ class GPIOPort extends events_1.EventEmitter {
             throw new InvalidAccessError(`The exported must be true and value of direction must be "out".`);
         }
         try {
-            await fs_1.promises.writeFile(path.join(SysfsGPIOPath, `gpio${this.portNumber}`, "value"), parseUint16(value.toString()).toString());
+            await fs_1.promises.writeFile(path.join(SysfsGPIOPath, this.portName, "value"), parseUint16(value.toString()).toString());
         }
         catch (error) {
             throw new OperationError(error);
