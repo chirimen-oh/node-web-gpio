@@ -9,7 +9,7 @@ const PollingInterval = 100;
 
 const SysfsGPIOPath = "/sys/class/gpio";
 
-const GPIOPortMapSizeMax = 1023;
+const GPIOPortMapSizeMax = 1024;
 
 const Uint16Max = 65535;
 
@@ -232,7 +232,7 @@ export class OperationError extends Error {}
 
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
-    [...Array(GPIOPortMapSizeMax + 1).keys()].map(portNumber => [
+    [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
       portNumber,
       new GPIOPort(portNumber)
     ])
