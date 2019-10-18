@@ -225,9 +225,21 @@ export class GPIOPort extends EventEmitter {
   }
 }
 
-export class InvalidAccessError extends Error {}
+export class InvalidAccessError extends Error {
+  constructor(message: string) {
+    super(message);
 
-export class OperationError extends Error {}
+    this.name = this.constructor.name;
+  }
+}
+
+export class OperationError extends Error {
+  constructor(message: string) {
+    super(message);
+
+    this.name = this.constructor.name;
+  }
+}
 
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
