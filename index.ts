@@ -36,13 +36,6 @@ interface GPIOChangeEventHandler {
   (event: GPIOChangeEvent): void;
 }
 
-/**
- * Not a specification in Web GPIO API.
- */
-interface GPIOPortChangeEventHandler {
-  (event: GPIOChangeEvent["value"]): void;
-}
-
 export class GPIOAccess extends EventEmitter {
   private readonly _ports: GPIOPortMap;
   onchange: GPIOChangeEventHandler | undefined;
@@ -52,8 +45,7 @@ export class GPIOAccess extends EventEmitter {
 
     this._ports = ports == null ? new GPIOPortMap() : ports;
     this._ports.forEach(port =>
-      port.on("change", value => {
-        const event: GPIOChangeEvent = { value, port };
+      port.on("change", event => {
         this.emit("change", event);
       })
     );
@@ -91,7 +83,7 @@ export class GPIOPort extends EventEmitter {
   private _exported: boolean | OperationError;
   private _value: GPIOValue | undefined;
   private _timeout: ReturnType<typeof setInterval> | undefined;
-  onchange: GPIOPortChangeEventHandler | undefined;
+  onchange: GPIOChangeEventHandler | undefined;
 
   constructor(portNumber: PortNumber) {
     super();
@@ -101,8 +93,8 @@ export class GPIOPort extends EventEmitter {
     this._direction = new OperationError("Unknown direction.");
     this._exported = new OperationError("Unknown export.");
 
-    this.on("change", (value: GPIOChangeEvent["value"]): void => {
-      if (this.onchange !== undefined) this.onchange(value);
+    this.on("change", (event: GPIOChangeEvent): void => {
+      if (this.onchange !== undefined) this.onchange(event);
     });
   }
 
@@ -198,7 +190,7 @@ export class GPIOPort extends EventEmitter {
 
       if (this._value !== value) {
         this._value = value;
-        this.emit("change", value);
+        this.emit("change", { value, port: this });
       }
 
       return value;
@@ -228,7 +220,6 @@ export class GPIOPort extends EventEmitter {
 export class InvalidAccessError extends Error {
   constructor(message: string) {
     super(message);
-
     this.name = this.constructor.name;
   }
 }
@@ -236,7 +227,6 @@ export class InvalidAccessError extends Error {
 export class OperationError extends Error {
   constructor(message: string) {
     super(message);
-
     this.name = this.constructor.name;
   }
 }
