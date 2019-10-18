@@ -12,12 +12,6 @@ interface GPIOChangeEvent {
 interface GPIOChangeEventHandler {
     (event: GPIOChangeEvent): void;
 }
-/**
- * Not a specification in Web GPIO API.
- */
-interface GPIOPortChangeEventHandler {
-    (event: GPIOChangeEvent["value"]): void;
-}
 export declare class GPIOAccess extends EventEmitter {
     private readonly _ports;
     onchange: GPIOChangeEventHandler | undefined;
@@ -40,7 +34,7 @@ export declare class GPIOPort extends EventEmitter {
     private _exported;
     private _value;
     private _timeout;
-    onchange: GPIOPortChangeEventHandler | undefined;
+    onchange: GPIOChangeEventHandler | undefined;
     constructor(portNumber: PortNumber);
     readonly portNumber: PortNumber;
     readonly portName: PortName;
@@ -53,8 +47,10 @@ export declare class GPIOPort extends EventEmitter {
     write(value: GPIOValue): Promise<void>;
 }
 export declare class InvalidAccessError extends Error {
+    constructor(message: string);
 }
 export declare class OperationError extends Error {
+    constructor(message: string);
 }
 export declare function requestGPIOAccess(): Promise<GPIOAccess>;
 export {};

@@ -21,8 +21,7 @@ class GPIOAccess extends events_1.EventEmitter {
     constructor(ports) {
         super();
         this._ports = ports == null ? new GPIOPortMap() : ports;
-        this._ports.forEach(port => port.on("change", value => {
-            const event = { value, port };
+        this._ports.forEach(port => port.on("change", event => {
             this.emit("change", event);
         }));
         this.on("change", (event) => {
@@ -54,9 +53,9 @@ class GPIOPort extends events_1.EventEmitter {
         this._pollingInterval = PollingInterval;
         this._direction = new OperationError("Unknown direction.");
         this._exported = new OperationError("Unknown export.");
-        this.on("change", (value) => {
+        this.on("change", (event) => {
             if (this.onchange !== undefined)
-                this.onchange(value);
+                this.onchange(event);
         });
     }
     get portNumber() {
@@ -125,7 +124,7 @@ class GPIOPort extends events_1.EventEmitter {
             const value = parseUint16(buffer.toString());
             if (this._value !== value) {
                 this._value = value;
-                this.emit("change", value);
+                this.emit("change", { value, port: this });
             }
             return value;
         }
@@ -147,9 +146,17 @@ class GPIOPort extends events_1.EventEmitter {
 }
 exports.GPIOPort = GPIOPort;
 class InvalidAccessError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+    }
 }
 exports.InvalidAccessError = InvalidAccessError;
 class OperationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+    }
 }
 exports.OperationError = OperationError;
 async function requestGPIOAccess() {
