@@ -1,11 +1,11 @@
 {
-  "name": "@notweb/gpio",
-  "version": "1.1.0",
+  "name": "node-web-gpio",
+  "version": "0.0.1",
   "description": "GPIO access with Node.js",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kou029w/notweb-gpio.git"
+    "url": "https://github.com/kou029w/node-web-gpio.git"
   },
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
@@ -13,10 +13,24 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^12.7.12",
+    "@types/node": "^12.11.1",
     "typescript": "^3.6.4"
   },
   "scripts": {
     "build": "tsc"
-  }
+  },
+  "keywords": [
+    "gpio",
+    "hardware",
+    "iot",
+    "linux",
+    "pi",
+    "raspberry",
+    "raspberry pi",
+    "raspi",
+    "robot",
+    "robotics",
+    "robots",
+    "rpi"
+  ]
 }

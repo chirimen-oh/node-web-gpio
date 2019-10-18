@@ -1,11 +1,11 @@
-# @notweb/gpio
+# node-web-gpio
 
 GPIO access with Node.js
 
 ## Usage
 
 ```js
-const { requestGPIOAccess } = require("@notweb/gpio");
+const { requestGPIOAccess } = require("node-web-gpio");
 const { promisify } = require("util");
 const sleep = promisify(setTimeout);
 
