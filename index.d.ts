@@ -16,7 +16,7 @@ export declare class GPIOAccess extends EventEmitter {
     private readonly _ports;
     onchange: GPIOChangeEventHandler | undefined;
     constructor(ports?: GPIOPortMap);
-    readonly ports: GPIOPortMap;
+    get ports(): GPIOPortMap;
     /**
      * Unexport all exported GPIO ports.
      */
@@ -36,11 +36,11 @@ export declare class GPIOPort extends EventEmitter {
     private _timeout;
     onchange: GPIOChangeEventHandler | undefined;
     constructor(portNumber: PortNumber);
-    readonly portNumber: PortNumber;
-    readonly portName: PortName;
-    readonly pinName: PinName;
-    readonly direction: DirectionMode;
-    readonly exported: boolean;
+    get portNumber(): PortNumber;
+    get portName(): PortName;
+    get pinName(): PinName;
+    get direction(): DirectionMode;
+    get exported(): boolean;
     export(direction: DirectionMode): Promise<void>;
     unexport(): Promise<void>;
     read(): Promise<GPIOValue>;
