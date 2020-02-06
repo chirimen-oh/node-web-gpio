@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kou029w/node-web-gpio.git"
+    "url": "https://github.com/chirimen-oh/node-web-gpio.git"
   },
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
