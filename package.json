@@ -9,9 +9,6 @@
   },
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "devDependencies": {
     "@types/node": "^12.11.1",
     "typescript": "~3.7"
