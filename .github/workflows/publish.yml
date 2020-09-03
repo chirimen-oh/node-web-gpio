@@ -20,7 +20,8 @@ jobs:
           git config --global user.email bot@example
           git config --global user.name bot
       - run: npm version patch
-      - run: npm publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish.
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          npm publish
       - run: git push origin --tags
