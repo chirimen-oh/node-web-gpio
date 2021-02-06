@@ -1,8 +1,4 @@
 {
-  "extends": [
-    "config:base",
-    ":preserveSemverRanges",
-    ":maintainLockFilesWeekly"
-  ],
+  "extends": ["config:base", ":preserveSemverRanges"],
   "automerge": true
 }
