@@ -232,12 +232,13 @@ export class OperationError extends Error {
 }
 
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
-  const ports = new GPIOPortMap(
-    [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
-      portNumber,
-      new GPIOPort(portNumber)
-    ])
-  );
-
-  return new GPIOAccess(ports);
+  return new Promise((res) => {
+    const ports = new GPIOPortMap(
+      [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
+        portNumber,
+        new GPIOPort(portNumber)
+      ])
+    );
+    res(new GPIOAccess(ports));
+  });
 }
