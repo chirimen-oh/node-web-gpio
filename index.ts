@@ -134,7 +134,7 @@ export class GPIOPort extends EventEmitter {
     }
 
     try {
-      clearInterval(this._timeout as any);
+      clearInterval(this._timeout as ReturnType<typeof setInterval>);
       if (!this.exported) {
         await fs.writeFile(
           path.join(SysfsGPIOPath, "export"),
@@ -160,7 +160,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   async unexport(): Promise<void> {
-    clearInterval(this._timeout as any);
+    clearInterval(this._timeout as ReturnType<typeof setInterval>);
 
     try {
       await fs.writeFile(
@@ -199,7 +199,7 @@ export class GPIOPort extends EventEmitter {
     }
   }
 
-  async write(value: GPIOValue) {
+  async write(value: GPIOValue): Promise<void> {
     if (!(this.exported && this.direction === "out")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "out".`
