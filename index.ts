@@ -62,7 +62,7 @@ export class GPIOAccess extends EventEmitter {
   /**
    * Unexport all exported GPIO ports.
    */
-  async unexportAll() {
+  async unexportAll(): Promise<void> {
     await Promise.all(
       [...this.ports.values()].map(port =>
         port.exported ? port.unexport() : undefined
@@ -121,7 +121,7 @@ export class GPIOPort extends EventEmitter {
     return this._exported;
   }
 
-  async export(direction: DirectionMode) {
+  async export(direction: DirectionMode): Promise<void> {
     if (!/^(in|out)$/.test(direction)) {
       throw new InvalidAccessError(`Must be "in" or "out".`);
     }
@@ -159,7 +159,7 @@ export class GPIOPort extends EventEmitter {
     this._exported = true;
   }
 
-  async unexport() {
+  async unexport(): Promise<void> {
     clearInterval(this._timeout as any);
 
     try {
@@ -174,7 +174,7 @@ export class GPIOPort extends EventEmitter {
     this._exported = false;
   }
 
-  async read() {
+  async read(): Promise<GPIOValue> {
     if (!(this.exported && this.direction === "in")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "in".`
