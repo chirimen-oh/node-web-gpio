@@ -147,7 +147,7 @@ export class GPIOPort extends EventEmitter {
       );
       if (direction === "in") {
         this._timeout = setInterval(
-          this.read.bind(this) => { },
+          () => this.read.bind(this),
           this._pollingInterval
         );
       }
