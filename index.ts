@@ -231,14 +231,15 @@ export class OperationError extends Error {
   }
 }
 
+// Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
+// eslint-disable-next-line
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
-  return new Promise((res) => {
-    const ports = new GPIOPortMap(
-      [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
-        portNumber,
-        new GPIOPort(portNumber)
-      ])
-    );
-    res(new GPIOAccess(ports));
-  });
+  const ports = new GPIOPortMap(
+    [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
+      portNumber,
+      new GPIOPort(portNumber)
+    ])
+  );
+
+  return new GPIOAccess(ports);  
 }
