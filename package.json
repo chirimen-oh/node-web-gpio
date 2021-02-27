@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "npx eslint index.ts",
+    "lint": "eslint index.ts",
     "prepare": "rm -rf dist && npm run build"
   },
   "keywords": [
