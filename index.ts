@@ -242,5 +242,5 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
     ])
   );
 
-  return new GPIOAccess(ports);  
+  return new GPIOAccess(ports);
 }
