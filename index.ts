@@ -62,7 +62,7 @@ export class GPIOAccess extends EventEmitter {
   /**
    * Unexport all exported GPIO ports.
    */
-  async unexportAll() {
+  async unexportAll(): Promise<void> {
     await Promise.all(
       [...this.ports.values()].map(port =>
         port.exported ? port.unexport() : undefined
@@ -121,7 +121,7 @@ export class GPIOPort extends EventEmitter {
     return this._exported;
   }
 
-  async export(direction: DirectionMode) {
+  async export(direction: DirectionMode): Promise<void> {
     if (!/^(in|out)$/.test(direction)) {
       throw new InvalidAccessError(`Must be "in" or "out".`);
     }
@@ -134,7 +134,7 @@ export class GPIOPort extends EventEmitter {
     }
 
     try {
-      clearInterval(this._timeout as any);
+      clearInterval(this._timeout as ReturnType<typeof setInterval>);
       if (!this.exported) {
         await fs.writeFile(
           path.join(SysfsGPIOPath, "export"),
@@ -147,6 +147,7 @@ export class GPIOPort extends EventEmitter {
       );
       if (direction === "in") {
         this._timeout = setInterval(
+          // eslint-disable-next-line
           this.read.bind(this),
           this._pollingInterval
         );
@@ -159,8 +160,8 @@ export class GPIOPort extends EventEmitter {
     this._exported = true;
   }
 
-  async unexport() {
-    clearInterval(this._timeout as any);
+  async unexport(): Promise<void> {
+    clearInterval(this._timeout as ReturnType<typeof setInterval>);
 
     try {
       await fs.writeFile(
@@ -174,7 +175,7 @@ export class GPIOPort extends EventEmitter {
     this._exported = false;
   }
 
-  async read() {
+  async read(): Promise<GPIOValue> {
     if (!(this.exported && this.direction === "in")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "in".`
@@ -199,7 +200,7 @@ export class GPIOPort extends EventEmitter {
     }
   }
 
-  async write(value: GPIOValue) {
+  async write(value: GPIOValue): Promise<void> {
     if (!(this.exported && this.direction === "out")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "out".`
@@ -231,6 +232,8 @@ export class OperationError extends Error {
   }
 }
 
+// Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
+// eslint-disable-next-line
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
     [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
