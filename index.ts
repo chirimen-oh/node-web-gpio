@@ -44,8 +44,8 @@ export class GPIOAccess extends EventEmitter {
     super();
 
     this._ports = ports == null ? new GPIOPortMap() : ports;
-    this._ports.forEach(port =>
-      port.on("change", event => {
+    this._ports.forEach((port) =>
+      port.on("change", (event) => {
         this.emit("change", event);
       })
     );
@@ -64,7 +64,7 @@ export class GPIOAccess extends EventEmitter {
    */
   async unexportAll(): Promise<void> {
     await Promise.all(
-      [...this.ports.values()].map(port =>
+      [...this.ports.values()].map((port) =>
         port.exported ? port.unexport() : undefined
       )
     );
@@ -236,9 +236,9 @@ export class OperationError extends Error {
 // eslint-disable-next-line
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
-    [...Array(GPIOPortMapSizeMax).keys()].map(portNumber => [
+    [...Array(GPIOPortMapSizeMax).keys()].map((portNumber) => [
       portNumber,
-      new GPIOPort(portNumber)
+      new GPIOPort(portNumber),
     ])
   );
 
