@@ -98,13 +98,6 @@ export class GPIOPort extends EventEmitter {
     });
   }
 
-  /**
-   *
-   *
-   * @readonly
-   * @type {PortNumber}
-   * @memberof GPIOPort
-   */
   get portNumber(): PortNumber {
     return this._portNumber;
   }
