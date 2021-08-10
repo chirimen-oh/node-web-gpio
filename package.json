@@ -26,12 +26,12 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint index.ts",
-    "prepare": "rm -rf dist && npm run build",
+    "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote --parser typescript",
+    "*.ts": [
+      "prettier --write --single-quote",
       "git add"
     ]
   },
