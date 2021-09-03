@@ -93,7 +93,7 @@ export class GPIOPort extends EventEmitter {
     this._pollingInterval = PollingInterval;
     this._direction = new OperationError("Unknown direction.");
     this._exported = new OperationError("Unknown export.");
-    thid._exportRetry = 0;
+    this._exportRetry = 0;
 
     this.on("change", (event: GPIOChangeEvent): void => {
       if (this.onchange !== undefined) this.onchange(event);
