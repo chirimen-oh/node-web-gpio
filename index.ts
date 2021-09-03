@@ -254,4 +254,8 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
   return new GPIOAccess(ports);
 }
 
-const sleep = msec: number => new Promise(resolve => setTimeout(resolve, msec));
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    return setTimeout(resolve, ms);
+  });
+}
