@@ -253,3 +253,5 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
 
   return new GPIOAccess(ports);
 }
+
+const sleep = promisify(setTimeout);
