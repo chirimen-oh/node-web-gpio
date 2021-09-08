@@ -81,6 +81,7 @@ export class GPIOPort extends EventEmitter {
   private readonly _pollingInterval: number;
   private _direction: DirectionMode | OperationError;
   private _exported: boolean | OperationError;
+  private _exportRetry: number;
   private _value: GPIOValue | undefined;
   private _timeout: ReturnType<typeof setInterval> | undefined;
   onchange: GPIOChangeEventHandler | undefined;
@@ -92,6 +93,7 @@ export class GPIOPort extends EventEmitter {
     this._pollingInterval = PollingInterval;
     this._direction = new OperationError('Unknown direction.');
     this._exported = new OperationError('Unknown export.');
+    this._exportRetry = 0;
 
     this.on('change', (event: GPIOChangeEvent): void => {
       if (this.onchange !== undefined) this.onchange(event);
@@ -153,7 +155,14 @@ export class GPIOPort extends EventEmitter {
         );
       }
     } catch (error) {
-      throw new OperationError(error);
+      if (this._exportRetry == 0) {
+        await sleep(100);
+        console.warn('May be the first time port access. Retry..');
+        ++this._exportRetry;
+        await this.export(direction);
+      } else {
+        throw new OperationError(error);
+      }
     }
 
     this._direction = direction;
@@ -243,4 +252,10 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
   );
 
   return new GPIOAccess(ports);
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    return setTimeout(resolve, ms);
+  });
 }
