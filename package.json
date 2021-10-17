@@ -1,6 +1,6 @@
 {
   "name": "node-web-gpio",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "GPIO access with Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,9 +15,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.14.25",
-    "@typescript-eslint/eslint-plugin": "^4.15.0",
-    "@typescript-eslint/parser": "^4.15.0",
-    "eslint": "^7.23.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",

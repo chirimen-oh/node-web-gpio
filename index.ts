@@ -1,13 +1,13 @@
-import { EventEmitter } from 'events';
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import { EventEmitter } from "events";
+import { promises as fs } from "fs";
+import * as path from "path";
 
 /**
  * Interval of file system polling, in milliseconds.
  */
 const PollingInterval = 100;
 
-const SysfsGPIOPath = '/sys/class/gpio';
+const SysfsGPIOPath = "/sys/class/gpio";
 
 const GPIOPortMapSizeMax = 1024;
 
@@ -23,7 +23,7 @@ type PortNumber = number;
 type PortName = string;
 type PinName = string;
 
-type DirectionMode = 'in' | 'out';
+type DirectionMode = "in" | "out";
 
 type GPIOValue = 0 | 1;
 
@@ -45,12 +45,12 @@ export class GPIOAccess extends EventEmitter {
 
     this._ports = ports == null ? new GPIOPortMap() : ports;
     this._ports.forEach((port) =>
-      port.on('change', (event) => {
-        this.emit('change', event);
+      port.on("change", (event) => {
+        this.emit("change", event);
       })
     );
 
-    this.on('change', (event: GPIOChangeEvent): void => {
+    this.on("change", (event: GPIOChangeEvent): void => {
       if (this.onchange !== undefined) this.onchange(event);
     });
   }
@@ -91,11 +91,11 @@ export class GPIOPort extends EventEmitter {
 
     this._portNumber = parseUint16(portNumber.toString());
     this._pollingInterval = PollingInterval;
-    this._direction = new OperationError('Unknown direction.');
-    this._exported = new OperationError('Unknown export.');
+    this._direction = new OperationError("Unknown direction.");
+    this._exported = new OperationError("Unknown export.");
     this._exportRetry = 0;
 
-    this.on('change', (event: GPIOChangeEvent): void => {
+    this.on("change", (event: GPIOChangeEvent): void => {
       if (this.onchange !== undefined) this.onchange(event);
     });
   }
@@ -110,7 +110,7 @@ export class GPIOPort extends EventEmitter {
 
   get pinName(): PinName {
     // NOTE: Unknown pinName.
-    return '';
+    return "";
   }
 
   get direction(): DirectionMode {
@@ -139,25 +139,25 @@ export class GPIOPort extends EventEmitter {
       clearInterval(this._timeout as ReturnType<typeof setInterval>);
       if (!this.exported) {
         await fs.writeFile(
-          path.join(SysfsGPIOPath, 'export'),
+          path.join(SysfsGPIOPath, "export"),
           String(this.portNumber)
         );
       }
       await fs.writeFile(
-        path.join(SysfsGPIOPath, this.portName, 'direction'),
+        path.join(SysfsGPIOPath, this.portName, "direction"),
         direction
       );
-      if (direction === 'in') {
+      if (direction === "in") {
         this._timeout = setInterval(
           // eslint-disable-next-line
           this.read.bind(this),
           this._pollingInterval
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       if (this._exportRetry == 0) {
         await sleep(100);
-        console.warn('May be the first time port access. Retry..');
+        console.warn("May be the first time port access. Retry..");
         ++this._exportRetry;
         await this.export(direction);
       } else {
@@ -174,10 +174,10 @@ export class GPIOPort extends EventEmitter {
 
     try {
       await fs.writeFile(
-        path.join(SysfsGPIOPath, 'unexport'),
+        path.join(SysfsGPIOPath, "unexport"),
         String(this.portNumber)
       );
-    } catch (error) {
+    } catch (error: any) {
       throw new OperationError(error);
     }
 
@@ -185,7 +185,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   async read(): Promise<GPIOValue> {
-    if (!(this.exported && this.direction === 'in')) {
+    if (!(this.exported && this.direction === "in")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "in".`
       );
@@ -193,24 +193,24 @@ export class GPIOPort extends EventEmitter {
 
     try {
       const buffer = await fs.readFile(
-        path.join(SysfsGPIOPath, this.portName, 'value')
+        path.join(SysfsGPIOPath, this.portName, "value")
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
 
       if (this._value !== value) {
         this._value = value;
-        this.emit('change', { value, port: this });
+        this.emit("change", { value, port: this });
       }
 
       return value;
-    } catch (error) {
+    } catch (error: any) {
       throw new OperationError(error);
     }
   }
 
   async write(value: GPIOValue): Promise<void> {
-    if (!(this.exported && this.direction === 'out')) {
+    if (!(this.exported && this.direction === "out")) {
       throw new InvalidAccessError(
         `The exported must be true and value of direction must be "out".`
       );
@@ -218,10 +218,10 @@ export class GPIOPort extends EventEmitter {
 
     try {
       await fs.writeFile(
-        path.join(SysfsGPIOPath, this.portName, 'value'),
+        path.join(SysfsGPIOPath, this.portName, "value"),
         parseUint16(value.toString()).toString()
       );
-    } catch (error) {
+    } catch (error: any) {
       throw new OperationError(error);
     }
   }
