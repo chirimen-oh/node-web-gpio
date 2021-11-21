@@ -12,5 +12,11 @@
   'exclude': [
     'node_modules',
     'dist'
-  ]
+  ],
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write --single-quote",
+      "git add"
+    ]
+  },
 }

@@ -30,12 +30,6 @@
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged"
   },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write --single-quote",
-      "git add"
-    ]
-  },
   "keywords": [
     "gpio",
     "hardware",
