@@ -11,6 +11,7 @@ const SysfsGPIOPath = "/sys/class/gpio";
 
 const GPIOPortMapSizeMax = 1024;
 
+// test 用変更
 const Uint16Max = 65535;
 
 function parseUint16(string: string) {
