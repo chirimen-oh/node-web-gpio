@@ -28,7 +28,7 @@
     "build": "tsc",
     "lint": "eslint index.ts",
     "prepare": "husky install && rm -rf dist && npm run build",
-    "precommit": "lint-staged"
+    "precommit": ".lintstagedrc.yaml"
   },
   "keywords": [
     "gpio",
