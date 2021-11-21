@@ -70,6 +70,17 @@ export class GPIOAccess extends EventEmitter {
       )
     );
   }
+
+  /**
+   *test
+   *
+   * @memberof GPIOAccess
+   */
+  testFunction() {
+    const a = [1, 1];
+    const b = a.map((aa) => aa);
+    console.log(b);
+  }
 }
 
 /**
