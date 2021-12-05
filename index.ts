@@ -28,6 +28,14 @@ type DirectionMode = "in" | "out";
 
 type GPIOValue = 0 | 1;
 
+function main() {
+  console.log("aaaaa");
+  console.log("aaaaa");
+  console.log("bbbb");
+  console.log("bbbb");
+  console.log("dddd");
+}
+
 interface GPIOChangeEvent {
   readonly value: GPIOValue;
   readonly port: GPIOPort;
