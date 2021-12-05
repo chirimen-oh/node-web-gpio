@@ -8,6 +8,9 @@ parserOptions:
   project: ./tsconfig.json
 plugins:
   - "@typescript-eslint"
+ignorePatterns:
+  - ./node_modules
+  - ./dist
 extends:
   - "eslint:recommended"
   - "plugin:@typescript-eslint/recommended"
