@@ -1,23 +1,9 @@
-# {
-#   'lint-staged': {
-#     '*': 'your-cmd'
-#   }
-# }
-{
-  'extends': './tsconfig.json',
-  'include': [
-    '*.ts',
-    '.eslintrc.js',
-    '.lintstagedrc.yaml'
-  ],
-  'exclude': [
-    'node_modules',
-    'dist'
-  ],
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write --single-quote",
-      "git add"
-    ]
-  },
-}
+"*.ts":
+  # typescript
+  # prettier で、ダブルクオートからシングルクオートへ
+  - prettier --write --single-quote
+  - git add
+"*.{md,yml}":
+  # markdown, yaml
+  - prettier --write
+  - git add
