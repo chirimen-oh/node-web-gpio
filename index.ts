@@ -32,7 +32,7 @@ function main() {
   console.log("aaaaa");
   console.log("aaaaa");
   console.log("bbbb");
-  console.log("bbbb");
+  console.log("ccccc");
   console.log("dddd");
 }
 
