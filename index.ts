@@ -11,7 +11,6 @@ const SysfsGPIOPath = '/sys/class/gpio';
 
 const GPIOPortMapSizeMax = 1024;
 
-// test 用変更
 const Uint16Max = 65535;
 
 function parseUint16(string: string) {
@@ -69,17 +68,6 @@ export class GPIOAccess extends EventEmitter {
         port.exported ? port.unexport() : undefined
       )
     );
-  }
-
-  /**
-   *test
-   *
-   * @memberof GPIOAccess
-   */
-  testFunction() {
-    const a = [1, 1];
-    const b = a.map((aa) => aa);
-    console.log(b);
   }
 }
 

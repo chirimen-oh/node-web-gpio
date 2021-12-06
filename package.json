@@ -24,7 +24,7 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "build": "tsc --target es2019 index.ts",
+    "build": "tsc　index.ts",
     "lint": "eslint index.ts",
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged"
