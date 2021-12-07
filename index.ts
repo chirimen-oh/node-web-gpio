@@ -13,8 +13,6 @@ const GPIOPortMapSizeMax = 1024;
 
 const Uint16Max = 65535;
 
-const aa = 'aaa';
-
 function parseUint16(string: string) {
   const n = Number.parseInt(string, 10);
   if (0 <= n && n <= Uint16Max) return n;
