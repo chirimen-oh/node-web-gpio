@@ -13,8 +13,8 @@ const GPIOPortMapSizeMax = 1024;
 
 const Uint16Max = 65535;
 
-function parseUint16(string: string) {
-  const n = Number.parseInt(string, 10);
+function parseUint16(parseString: string) {
+  const n = Number.parseInt(parseString, 10);
   if (0 <= n && n <= Uint16Max) return n;
   else throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
 }
