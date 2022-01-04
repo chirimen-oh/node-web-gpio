@@ -7,39 +7,77 @@ import * as path from 'path';
  */
 const PollingInterval = 100;
 
+/**
+ * GPIO パス
+ */
 const SysfsGPIOPath = '/sys/class/gpio';
 
+/**
+ * GPIO ポートマップサイズ
+ */
 const GPIOPortMapSizeMax = 1024;
 
+/**
+ * Uint16 Max サイズ
+ */
 const Uint16Max = 65535;
 
-function parseUint16(string: string) {
-  const n = Number.parseInt(string, 10);
+/**
+ *
+ * Uint16型変換処理
+ * @param parseString 変換文字列
+ * @return Uint16型変換値
+ */
+function parseUint16(parseString: string) {
+  const n = Number.parseInt(parseString, 10);
   if (0 <= n && n <= Uint16Max) return n;
   else throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
 }
 
+/** ポート番号 */
 type PortNumber = number;
+/** ポート名 */
 type PortName = string;
+/** ピン名 */
 type PinName = string;
 
+/** 入出力方向 */
 type DirectionMode = 'in' | 'out';
 
+/** GPIO 値 0: OFF / 1: ON */
 type GPIOValue = 0 | 1;
 
+/**
+ * GPIO チェンジイベント
+ */
 interface GPIOChangeEvent {
+  /** 入出力値 読み取り専用 */
   readonly value: GPIOValue;
+  /** ポート 読み取り専用 */
   readonly port: GPIOPort;
 }
 
+/**
+ * GPIO チェンジイベントハンドラ
+ */
 interface GPIOChangeEventHandler {
+  /** イベント */
   (event: GPIOChangeEvent): void;
 }
 
+/**
+ * GPIO クラス定義
+ */
 export class GPIOAccess extends EventEmitter {
+  /** ポート 読み取り専用 */
   private readonly _ports: GPIOPortMap;
+  /** チェンジイベント */
   onchange: GPIOChangeEventHandler | undefined;
 
+  /**
+   * Creates an instance of GPIOAccess.
+   * @param ports ポート番号
+   */
   constructor(ports?: GPIOPortMap) {
     super();
 
@@ -55,12 +93,18 @@ export class GPIOAccess extends EventEmitter {
     });
   }
 
+  /**
+   * ポート情報取得処理
+   * @return 現在のポート情報
+   */
   get ports(): GPIOPortMap {
     return this._ports;
   }
 
   /**
    * Unexport all exported GPIO ports.
+   * 全てのポート開放をする
+   * @return ポート開放結果 Promise
    */
   async unexportAll(): Promise<void> {
     await Promise.all(
@@ -76,16 +120,31 @@ export class GPIOAccess extends EventEmitter {
  */
 export class GPIOPortMap extends Map<PortNumber, GPIOPort> {}
 
+/**
+ * GPIO ポートイベント
+ */
 export class GPIOPort extends EventEmitter {
+  /** ポート番号 読み取り専用 */
   private readonly _portNumber: PortNumber;
+  /** ポーリング間隔 読み取り専用 */
   private readonly _pollingInterval: number;
+  /** 入出力方向 */
   private _direction: DirectionMode | OperationError;
+  /** エクスポート */
   private _exported: boolean | OperationError;
+  /** エクスポートリトライ回数 */
   private _exportRetry: number;
+  /** 入出力値 */
   private _value: GPIOValue | undefined;
+  /** タイムアウト値 */
   private _timeout: ReturnType<typeof setInterval> | undefined;
+  /** チェンジイベント */
   onchange: GPIOChangeEventHandler | undefined;
 
+  /**
+   * Creates an instance of GPIOPort.
+   * @param ports ポート番号
+   */
   constructor(portNumber: PortNumber) {
     super();
 
@@ -100,29 +159,54 @@ export class GPIOPort extends EventEmitter {
     });
   }
 
+  /**
+   * ポート番号取得処理
+   * @return 現在のポート番号
+   */
   get portNumber(): PortNumber {
     return this._portNumber;
   }
 
+  /**
+   * ポート名取得処理
+   * @return 現在のポート名
+   */
   get portName(): PortName {
     return `gpio${this.portNumber}`;
   }
 
+  /**
+   * ピン名取得処理
+   * @return 現在のピン名
+   */
   get pinName(): PinName {
     // NOTE: Unknown pinName.
     return '';
   }
 
+  /**
+   * GPIO 入出力方向取得処理
+   * @return 現在のGPIO 入出力方向
+   */
   get direction(): DirectionMode {
     if (this._direction instanceof OperationError) throw this._direction;
     return this._direction;
   }
 
+  /**
+   * GPIO 入出力方向取得処理
+   * @return 現在のGPIO 入出力方向
+   */
   get exported(): boolean {
     if (this._exported instanceof OperationError) throw this._exported;
     return this._exported;
   }
 
+  /**
+   * GPIO 入出力方向取得処理
+   * @param direction GPIO 入出力方向
+   * @return  export の Promise
+   */
   async export(direction: DirectionMode): Promise<void> {
     if (!/^(in|out)$/.test(direction)) {
       throw new InvalidAccessError(`Must be "in" or "out".`);
@@ -169,6 +253,11 @@ export class GPIOPort extends EventEmitter {
     this._exported = true;
   }
 
+  /**
+   * Unexport exported GPIO ports.
+   * ポート開放をする
+   * @return ポート開放結果 Promise
+   */
   async unexport(): Promise<void> {
     clearInterval(this._timeout as ReturnType<typeof setInterval>);
 
@@ -184,6 +273,10 @@ export class GPIOPort extends EventEmitter {
     this._exported = false;
   }
 
+  /**
+   * 入力値読み取り処理
+   * @return 入力値読み取り結果 Promise
+   */
   async read(): Promise<GPIOValue> {
     if (!(this.exported && this.direction === 'in')) {
       throw new InvalidAccessError(
@@ -209,6 +302,10 @@ export class GPIOPort extends EventEmitter {
     }
   }
 
+  /**
+   * 出力値書き込み処理
+   * @return 出力値読み取り結果 Promise
+   */
   async write(value: GPIOValue): Promise<void> {
     if (!(this.exported && this.direction === 'out')) {
       throw new InvalidAccessError(
@@ -227,21 +324,39 @@ export class GPIOPort extends EventEmitter {
   }
 }
 
+/**
+ * 無効なアクセスエラークラス定義
+ */
 export class InvalidAccessError extends Error {
+  /**
+   * Creates an instance of InvalidAccessError.
+   * @param message エラーメッセージ
+   */
   constructor(message: string) {
     super(message);
     this.name = this.constructor.name;
   }
 }
 
+/**
+ * 操作エラークラス定義
+ */
 export class OperationError extends Error {
+  /**
+   * Creates an instance of OperationError.
+   * @param message エラーメッセージ
+   */
   constructor(message: string) {
     super(message);
     this.name = this.constructor.name;
   }
 }
 
-// Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
+/**
+ * requestGPIOAccess 関数
+ * Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
+ * @return GPIOAccess インスタンス生成結果 Promise
+ */
 // eslint-disable-next-line
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
@@ -254,6 +369,11 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
   return new GPIOAccess(ports);
 }
 
+/**
+ * スリープ 関数
+ * @param ms スリープ時間（ミリ秒）
+ * @return スリープ後の Promise
+ */
 function sleep(ms: number) {
   return new Promise((resolve) => {
     return setTimeout(resolve, ms);
