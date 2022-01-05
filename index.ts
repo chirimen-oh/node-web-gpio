@@ -143,7 +143,7 @@ export class GPIOPort extends EventEmitter {
 
   /**
    * Creates an instance of GPIOPort.
-   * @param ports ポート番号
+   * @param portNumber ポート番号
    */
   constructor(portNumber: PortNumber) {
     super();
