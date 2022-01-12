@@ -51,9 +51,9 @@ type GPIOValue = 0 | 1;
  * GPIO チェンジイベント
  */
 interface GPIOChangeEvent {
-  /** 入出力値 読み取り専用 */
+  /** 入出力値 */
   readonly value: GPIOValue;
-  /** ポート 読み取り専用 */
+  /** ポート */
   readonly port: GPIOPort;
 }
 
@@ -66,12 +66,12 @@ interface GPIOChangeEventHandler {
 }
 
 /**
- * GPIO クラス定義
+ * GPIO
  */
 export class GPIOAccess extends EventEmitter {
   /** ポート 読み取り専用 */
   private readonly _ports: GPIOPortMap;
-  /** チェンジイベント */
+  /** GPIO チェンジイベントハンドラ */
   onchange: GPIOChangeEventHandler | undefined;
 
   /**
@@ -138,7 +138,7 @@ export class GPIOPort extends EventEmitter {
   private _value: GPIOValue | undefined;
   /** タイムアウト値 */
   private _timeout: ReturnType<typeof setInterval> | undefined;
-  /** チェンジイベント */
+  /** GPIO チェンジイベントハンドラ */
   onchange: GPIOChangeEventHandler | undefined;
 
   /**
@@ -185,7 +185,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   /**
-   * GPIO 入出力方向取得処理
+   * GPIO 入出力方向 getter
    * @return 現在のGPIO 入出力方向
    */
   get direction(): DirectionMode {
@@ -194,8 +194,8 @@ export class GPIOPort extends EventEmitter {
   }
 
   /**
-   * GPIO 入出力方向取得処理
-   * @return 現在のGPIO 入出力方向
+   * GPIO 出力 getter
+   * @return 現在のGPIO 出力
    */
   get exported(): boolean {
     if (this._exported instanceof OperationError) throw this._exported;
