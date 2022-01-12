@@ -69,7 +69,7 @@ interface GPIOChangeEventHandler {
  * GPIO
  */
 export class GPIOAccess extends EventEmitter {
-  /** ポート 読み取り専用 */
+  /** ポート */
   private readonly _ports: GPIOPortMap;
   /** GPIO チェンジイベントハンドラ */
   onchange: GPIOChangeEventHandler | undefined;
