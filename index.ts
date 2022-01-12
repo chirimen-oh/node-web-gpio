@@ -203,7 +203,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   /**
-   * GPIO 入出力方向取得処理
+   * GPIO 出力処理
    * @param direction GPIO 入出力方向
    * @return  export の Promise
    */
@@ -352,11 +352,7 @@ export class OperationError extends Error {
   }
 }
 
-/**
- * requestGPIOAccess 関数
- * Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
- * @return GPIOAccess インスタンス生成結果 Promise
- */
+// Web GPIOの仕様に基づく意図的なasync関数の使用なので、ルールを無効化
 // eslint-disable-next-line
 export async function requestGPIOAccess(): Promise<GPIOAccess> {
   const ports = new GPIOPortMap(
@@ -370,7 +366,7 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
 }
 
 /**
- * スリープ 関数
+ * 待機 関数
  * @param ms スリープ時間（ミリ秒）
  * @return スリープ後の Promise
  */
