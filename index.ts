@@ -44,7 +44,7 @@ type PinName = string;
 /** 入出力方向 */
 type DirectionMode = 'in' | 'out';
 
-/** GPIO 値 0: OFF / 1: ON */
+/** GPIO 値 0: LOW / 1: HIGH */
 type GPIOValue = 0 | 1;
 
 /**
@@ -104,7 +104,7 @@ export class GPIOAccess extends EventEmitter {
   /**
    * Unexport all exported GPIO ports.
    * 全てのポート開放をする
-   * @return ポート開放結果 Promise
+   * @return ポート開放結果
    */
   async unexportAll(): Promise<void> {
     await Promise.all(
@@ -121,12 +121,12 @@ export class GPIOAccess extends EventEmitter {
 export class GPIOPortMap extends Map<PortNumber, GPIOPort> {}
 
 /**
- * GPIO ポートイベント
+ * GPIO ポート
  */
 export class GPIOPort extends EventEmitter {
-  /** ポート番号 読み取り専用 */
+  /** ポート番号 */
   private readonly _portNumber: PortNumber;
-  /** ポーリング間隔 読み取り専用 */
+  /** ポーリング間隔 */
   private readonly _pollingInterval: number;
   /** 入出力方向 */
   private _direction: DirectionMode | OperationError;
@@ -194,7 +194,7 @@ export class GPIOPort extends EventEmitter {
   }
 
   /**
-   * GPIO 出力 getter
+   * GPIO export の有無 getter
    * @return 現在のGPIO 出力
    */
   get exported(): boolean {
@@ -205,7 +205,7 @@ export class GPIOPort extends EventEmitter {
   /**
    * GPIO 出力処理
    * @param direction GPIO 入出力方向
-   * @return  export の Promise
+   * @return export 処理の完了
    */
   async export(direction: DirectionMode): Promise<void> {
     if (!/^(in|out)$/.test(direction)) {
@@ -256,7 +256,7 @@ export class GPIOPort extends EventEmitter {
   /**
    * Unexport exported GPIO ports.
    * ポート開放をする
-   * @return ポート開放結果 Promise
+   * @return ポート開放処理の完了
    */
   async unexport(): Promise<void> {
     clearInterval(this._timeout as ReturnType<typeof setInterval>);
@@ -275,7 +275,7 @@ export class GPIOPort extends EventEmitter {
 
   /**
    * 入力値読み取り処理
-   * @return 入力値読み取り結果 Promise
+   * @return 読み取り処理の完了
    */
   async read(): Promise<GPIOValue> {
     if (!(this.exported && this.direction === 'in')) {
@@ -304,7 +304,7 @@ export class GPIOPort extends EventEmitter {
 
   /**
    * 出力値書き込み処理
-   * @return 出力値読み取り結果 Promise
+   * @return 読み取り処理の完了
    */
   async write(value: GPIOValue): Promise<void> {
     if (!(this.exported && this.direction === 'out')) {
@@ -325,7 +325,7 @@ export class GPIOPort extends EventEmitter {
 }
 
 /**
- * 無効なアクセスエラークラス定義
+ * 無効なアクセスエラー
  */
 export class InvalidAccessError extends Error {
   /**
@@ -339,7 +339,7 @@ export class InvalidAccessError extends Error {
 }
 
 /**
- * 操作エラークラス定義
+ * 操作エラー
  */
 export class OperationError extends Error {
   /**
@@ -368,7 +368,7 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
 /**
  * 待機 関数
  * @param ms スリープ時間（ミリ秒）
- * @return スリープ後の Promise
+ * @return 待機完了
  */
 function sleep(ms: number) {
   return new Promise((resolve) => {
