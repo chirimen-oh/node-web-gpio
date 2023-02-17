@@ -28,4 +28,8 @@ main();
 
 ## Document
 
-[Web GPIO API](http://browserobo.github.io/WebGPIO)
+- [TSDoc](http://chirimen.org/node-web-gpio/)
+
+## Reference
+
+- [Web GPIO API for W3C Draft](http://browserobo.github.io/WebGPIO)
