@@ -1,6 +1,6 @@
 {
   "name": "node-web-gpio",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "GPIO access with Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
