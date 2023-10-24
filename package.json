@@ -14,7 +14,7 @@
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.4.0",
