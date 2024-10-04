@@ -1,6 +1,7 @@
-import { EventEmitter } from 'events';
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import { EventEmitter } from 'node:events';
+import { promises as fs } from 'node:fs';
+import * as os from 'node:os';
+import * as path from 'node:path';
 
 /**
  * Interval of file system polling, in milliseconds.
@@ -34,6 +35,15 @@ function parseUint16(parseString: string) {
   // biome-ignore lint/style/noUselessElse:
   else throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
 }
+
+/**
+ * GPIO0 オフセット
+ * @see {@link https://github.com/raspberrypi/linux/issues/6037}
+ */
+const GpioOffset =
+  process.platform === 'linux' && 6.6 <= Number(os.release().match(/\d+\.\d+/))
+    ? 512
+    : 0;
 
 /** ポート番号 */
 type PortNumber = number;
@@ -151,7 +161,7 @@ export class GPIOPort extends EventEmitter {
   constructor(portNumber: PortNumber) {
     super();
 
-    this._portNumber = parseUint16(portNumber.toString());
+    this._portNumber = parseUint16(portNumber.toString()) + GpioOffset;
     this._pollingInterval = PollingInterval;
     this._direction = new OperationError('Unknown direction.');
     this._exported = new OperationError('Unknown export.');
