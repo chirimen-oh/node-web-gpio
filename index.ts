@@ -31,6 +31,7 @@ const Uint16Max = 65535;
 function parseUint16(parseString: string) {
   const n = Number.parseInt(parseString, 10);
   if (0 <= n && n <= Uint16Max) return n;
+  // biome-ignore lint/style/noUselessElse:
   else throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
 }
 
@@ -62,6 +63,7 @@ interface GPIOChangeEvent {
  */
 interface GPIOChangeEventHandler {
   /** イベント */
+  // biome-ignore lint/style/useShorthandFunctionType:
   (event: GPIOChangeEvent): void;
 }
 
@@ -82,10 +84,11 @@ export class GPIOAccess extends EventEmitter {
     super();
 
     this._ports = ports == null ? new GPIOPortMap() : ports;
+    // biome-ignore lint/complexity/noForEach:
     this._ports.forEach((port) =>
       port.on('change', (event) => {
         this.emit('change', event);
-      })
+      }),
     );
 
     this.on('change', (event: GPIOChangeEvent): void => {
@@ -109,8 +112,8 @@ export class GPIOAccess extends EventEmitter {
   async unexportAll(): Promise<void> {
     await Promise.all(
       [...this.ports.values()].map((port) =>
-        port.exported ? port.unexport() : undefined
-      )
+        port.exported ? port.unexport() : undefined,
+      ),
     );
   }
 }
@@ -224,22 +227,23 @@ export class GPIOPort extends EventEmitter {
       if (!this.exported) {
         await fs.writeFile(
           path.join(SysfsGPIOPath, 'export'),
-          String(this.portNumber)
+          String(this.portNumber),
         );
       }
       await fs.writeFile(
         path.join(SysfsGPIOPath, this.portName, 'direction'),
-        direction
+        direction,
       );
       if (direction === 'in') {
         this._timeout = setInterval(
           // eslint-disable-next-line
           this.read.bind(this),
-          this._pollingInterval
+          this._pollingInterval,
         );
       }
+      // biome-ignore lint/suspicious/noExplicitAny:
     } catch (error: any) {
-      if (this._exportRetry == 0) {
+      if (this._exportRetry === 0) {
         await sleep(100);
         console.warn('May be the first time port access. Retry..');
         ++this._exportRetry;
@@ -264,8 +268,9 @@ export class GPIOPort extends EventEmitter {
     try {
       await fs.writeFile(
         path.join(SysfsGPIOPath, 'unexport'),
-        String(this.portNumber)
+        String(this.portNumber),
       );
+      // biome-ignore lint/suspicious/noExplicitAny:
     } catch (error: any) {
       throw new OperationError(error);
     }
@@ -280,13 +285,13 @@ export class GPIOPort extends EventEmitter {
   async read(): Promise<GPIOValue> {
     if (!(this.exported && this.direction === 'in')) {
       throw new InvalidAccessError(
-        `The exported must be true and value of direction must be "in".`
+        `The exported must be true and value of direction must be "in".`,
       );
     }
 
     try {
       const buffer = await fs.readFile(
-        path.join(SysfsGPIOPath, this.portName, 'value')
+        path.join(SysfsGPIOPath, this.portName, 'value'),
       );
 
       const value = parseUint16(buffer.toString()) as GPIOValue;
@@ -297,6 +302,7 @@ export class GPIOPort extends EventEmitter {
       }
 
       return value;
+      // biome-ignore lint/suspicious/noExplicitAny:
     } catch (error: any) {
       throw new OperationError(error);
     }
@@ -309,15 +315,16 @@ export class GPIOPort extends EventEmitter {
   async write(value: GPIOValue): Promise<void> {
     if (!(this.exported && this.direction === 'out')) {
       throw new InvalidAccessError(
-        `The exported must be true and value of direction must be "out".`
+        `The exported must be true and value of direction must be "out".`,
       );
     }
 
     try {
       await fs.writeFile(
         path.join(SysfsGPIOPath, this.portName, 'value'),
-        parseUint16(value.toString()).toString()
+        parseUint16(value.toString()).toString(),
       );
+      // biome-ignore lint/suspicious/noExplicitAny:
     } catch (error: any) {
       throw new OperationError(error);
     }
@@ -359,7 +366,7 @@ export async function requestGPIOAccess(): Promise<GPIOAccess> {
     [...Array(GPIOPortMapSizeMax).keys()].map((portNumber) => [
       portNumber,
       new GPIOPort(portNumber),
-    ])
+    ]),
   );
 
   return new GPIOAccess(ports);

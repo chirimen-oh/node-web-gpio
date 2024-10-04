@@ -14,10 +14,8 @@
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
     "@types/node": "^22.7.4",
-    "@typescript-eslint/eslint-plugin": "^8.8.0",
-    "@typescript-eslint/parser": "^8.8.0",
-    "eslint": "^9.11.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
@@ -26,7 +24,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint index.ts",
+    "lint": "biome lint index.ts",
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged",
     "docs": "npm run remove:docs && npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./ README.md",
