@@ -14,15 +14,15 @@
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^15.0.0",
-    "prettier": "^3.0.0",
-    "typedoc": "^0.26.0",
-    "typescript": "^5.0.0"
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "^9.11.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typedoc": "^0.26.7",
+    "typescript": "^5.6.2"
   },
   "scripts": {
     "build": "tsc",
@@ -46,5 +46,6 @@
     "robotics",
     "robots",
     "rpi"
-  ]
+  ],
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
