@@ -1,4 +1,4 @@
 {
-  "extends": ["config:base", ":preserveSemverRanges"],
-  "automerge": true
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":automergeAll", "schedule:monthly"]
 }
