@@ -253,7 +253,7 @@ export class GPIOPort extends EventEmitter {
       }
       // biome-ignore lint/suspicious/noExplicitAny:
     } catch (error: any) {
-      if (this._exportRetry === 0) {
+      if (this._exportRetry < 10) {
         await sleep(100);
         console.warn('May be the first time port access. Retry..');
         ++this._exportRetry;
