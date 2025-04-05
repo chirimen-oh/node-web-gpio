@@ -1,0 +1,18 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}<html>
+<head>
+    <title>EA Advisor Creator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Expert Advisor Creator</h1>
+    <div id="strategyBuilder">
+        <!-- Drag-and-drop UI for building strategies -->
+    </div>
+    <button id="generateCode">Generate EA Code</button>
+    <pre id="outputCode"></pre>
+    <script src="script.js"></script>
+</body>
+</html>
