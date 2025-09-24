@@ -7,14 +7,12 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - id: yarn_cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      - uses: actions/setup-node@v3
         with:
-          path: ${{ steps.yarn_cache.outputs.dir }}
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: yarn-
-      - run: yarn
+          node-version: "22"
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
       - name: Git configuration.
         run: |
           git config --global user.email bot@example
@@ -23,5 +21,6 @@ jobs:
         run: |
           npm version patch
           git push --atomic --tags origin HEAD
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
           npm publish
+        env:
+          NODE_AUTH_TOKEN: "${{ secrets.NPM_TOKEN }}"
