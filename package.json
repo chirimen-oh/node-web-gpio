@@ -27,6 +27,7 @@
     "lint": "biome lint index.ts",
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged",
+    "preversion": "npm run docs",
     "docs": "npm run remove:docs && npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./ README.md",
     "typedoc": "typedoc",
     "remove:docs": "rm -rf docs"
