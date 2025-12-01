@@ -46,5 +46,5 @@
     "robots",
     "rpi"
   ],
-  "packageManager": "npm@11.6.2"
+  "packageManager": "npm@11.6.4"
 }
