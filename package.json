@@ -1,6 +1,6 @@
 {
   "name": "node-web-gpio",
-  "version": "1.1.36",
+  "version": "1.1.37",
   "description": "GPIO access with Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,12 +14,12 @@
   "author": "Kohei Watanabe <kou029w@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@types/node": "22.18.13",
+    "@biomejs/biome": "2.3.10",
+    "@types/node": "^22.19.3",
     "husky": "9.1.7",
-    "lint-staged": "15.5.2",
-    "prettier": "3.6.2",
-    "typedoc": "0.28.14",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.4",
+    "typedoc": "0.28.15",
     "typescript": "5.9.3"
   },
   "scripts": {
@@ -46,5 +46,5 @@
     "robots",
     "rpi"
   ],
-  "packageManager": "npm@11.6.4"
+  "packageManager": "npm@11.7.0"
 }

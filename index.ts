@@ -32,7 +32,6 @@ const Uint16Max = 65535;
 function parseUint16(parseString: string) {
   const n = Number.parseInt(parseString, 10);
   if (0 <= n && n <= Uint16Max) return n;
-  // biome-ignore lint/style/noUselessElse:
   else throw new RangeError(`Must be between 0 and ${Uint16Max}.`);
 }
 
@@ -73,7 +72,7 @@ interface GPIOChangeEvent {
  */
 interface GPIOChangeEventHandler {
   /** イベント */
-  // biome-ignore lint/style/useShorthandFunctionType:
+  // biome-ignore lint/style/useShorthandFunctionType: インターフェースの呼び出しシグネチャとして定義する必要があるため
   (event: GPIOChangeEvent): void;
 }
 
@@ -94,7 +93,7 @@ export class GPIOAccess extends EventEmitter {
     super();
 
     this._ports = ports == null ? new GPIOPortMap() : ports;
-    // biome-ignore lint/complexity/noForEach:
+    // biome-ignore lint/suspicious/useIterableCallbackReturn: port.on()の戻り値は使用しないため
     this._ports.forEach((port) =>
       port.on('change', (event) => {
         this.emit('change', event);
@@ -251,7 +250,7 @@ export class GPIOPort extends EventEmitter {
           this._pollingInterval,
         );
       }
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: エラーの型が不明なため、any型を使用してOperationErrorに変換する
     } catch (error: any) {
       if (this._exportRetry < 10) {
         await sleep(100);
@@ -280,7 +279,7 @@ export class GPIOPort extends EventEmitter {
         path.join(SysfsGPIOPath, 'unexport'),
         String(this.portNumber),
       );
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: エラーの型が不明なため、any型を使用してOperationErrorに変換する
     } catch (error: any) {
       throw new OperationError(error);
     }
@@ -312,7 +311,7 @@ export class GPIOPort extends EventEmitter {
       }
 
       return value;
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: エラーの型が不明なため、any型を使用してOperationErrorに変換する
     } catch (error: any) {
       throw new OperationError(error);
     }
@@ -334,7 +333,7 @@ export class GPIOPort extends EventEmitter {
         path.join(SysfsGPIOPath, this.portName, 'value'),
         parseUint16(value.toString()).toString(),
       );
-      // biome-ignore lint/suspicious/noExplicitAny:
+      // biome-ignore lint/suspicious/noExplicitAny: エラーの型が不明なため、any型を使用してOperationErrorに変換する
     } catch (error: any) {
       throw new OperationError(error);
     }
