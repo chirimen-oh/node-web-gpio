@@ -1,6 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # eslint 実行
 npm run lint
 # lint-staged 実行（prettier）
