@@ -1,4 +1,5 @@
 {
   "entryPoints": ["index.ts"],
-  "out": "docs"
+  "out": "docs",
+  "plugin": ["typedoc-rhineai-theme"]
 }
