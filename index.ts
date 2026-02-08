@@ -40,7 +40,8 @@ function parseUint16(parseString: string) {
  * @see {@link https://github.com/raspberrypi/linux/issues/6037}
  */
 const GpioOffset =
-  process.platform === 'linux' && 6.6 <= Number(os.release().match(/\d+\.\d+/))
+  process.platform === 'linux' &&
+  os.release().localeCompare('6.6', undefined, { numeric: true }) >= 0
     ? 512
     : 0;
 
