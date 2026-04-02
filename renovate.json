@@ -1,4 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices", ":automergeAll", "schedule:monthly"]
+  "extends": [
+    "config:best-practices",
+    "group:all",
+    "schedule:monthly",
+    ":automergeAll"
+  ],
+  "postUpdateOptions": ["npmDedupe"]
 }
