@@ -4,5 +4,6 @@
     "outDir": "dist",
     "module": "node16",
     "declaration": true,
-  },
+    "types": ["node"]
+  }
 }

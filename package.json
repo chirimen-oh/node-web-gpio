@@ -2,39 +2,6 @@
   "name": "node-web-gpio",
   "version": "1.1.65",
   "description": "GPIO access with Node.js",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/*"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/chirimen-oh/node-web-gpio.git"
-  },
-  "author": "Kohei Watanabe <kou029w@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@tsconfig/strictest": "2.0.8",
-    "@types/node": "22.19.13",
-    "husky": "9.1.7",
-    "lint-staged": "16.2.7",
-    "oxfmt": "0.53.0",
-    "oxlint": "1.68.0",
-    "oxlint-tsgolint": "0.23.0",
-    "typedoc": "0.28.15",
-    "typedoc-rhineai-theme": "1.2.0",
-    "typescript": "5.9.3"
-  },
-  "scripts": {
-    "build": "tsc",
-    "lint": "oxlint",
-    "prepare": "husky install && rm -rf dist && npm run build",
-    "precommit": "lint-staged",
-    "preversion": "npm run docs && git add docs",
-    "docs": "npm run remove:docs && npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./ README.md",
-    "typedoc": "typedoc",
-    "remove:docs": "rm -rf docs"
-  },
   "keywords": [
     "gpio",
     "hardware",
@@ -49,5 +16,35 @@
     "robots",
     "rpi"
   ],
-  "packageManager": "npm@11.7.0"
+  "license": "MIT",
+  "author": "Kohei Watanabe <nebel@fogtype.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chirimen-oh/node-web-gpio.git"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "oxlint",
+    "prepare": "husky install && rm -rf dist && npm run build",
+    "precommit": "lint-staged",
+    "preversion": "npm run docs && git add docs",
+    "docs": "typedoc"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "2.0.8",
+    "@types/node": "25.9.2",
+    "husky": "9.1.7",
+    "lint-staged": "17.0.7",
+    "oxfmt": "0.53.0",
+    "oxlint": "1.68.0",
+    "oxlint-tsgolint": "0.23.0",
+    "typedoc": "0.28.19",
+    "typedoc-rhineai-theme": "1.2.0",
+    "typescript": "6.0.3"
+  }
 }
