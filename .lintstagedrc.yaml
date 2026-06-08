@@ -1,7 +1,2 @@
-"*.ts":
-  # typescript
-  # prettier で、ダブルクオートからシングルクオートへ
-  - prettier --write --single-quote
-"*.{md,yml}":
-  # markdown, yaml
-  - prettier --write
+"*.{ts,md,yml}":
+  - oxfmt --write
