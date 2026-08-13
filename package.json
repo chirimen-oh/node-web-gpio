@@ -45,6 +45,6 @@
     "oxlint-tsgolint": "7.0.2001",
     "typedoc": "0.28.20",
     "typedoc-rhineai-theme": "1.2.0",
-    "typescript": "7.0.2"
+    "typescript": "6.0.3"
   }
 }
