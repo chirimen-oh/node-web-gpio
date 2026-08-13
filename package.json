@@ -37,14 +37,14 @@
   },
   "devDependencies": {
     "@tsconfig/strictest": "2.0.8",
-    "@types/node": "25.9.4",
+    "@types/node": "25.9.5",
     "husky": "9.1.7",
-    "lint-staged": "17.0.8",
-    "oxfmt": "0.56.0",
-    "oxlint": "1.71.0",
-    "oxlint-tsgolint": "0.23.0",
-    "typedoc": "0.28.19",
+    "lint-staged": "17.3.0",
+    "oxfmt": "0.63.0",
+    "oxlint": "1.78.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "typedoc": "0.28.20",
     "typedoc-rhineai-theme": "1.2.0",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   }
 }
