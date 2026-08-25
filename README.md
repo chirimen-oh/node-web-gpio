@@ -27,7 +27,7 @@ while (true) {
 
 ## Document
 
-- [TSDoc](http://www.chirimen.org/node-web-gpio/)
+- [TSDoc](https://npmx.dev/package-docs/node-web-gpio)
 
 ## Reference
 
