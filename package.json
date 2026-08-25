@@ -31,9 +31,7 @@
     "build": "tsc",
     "lint": "oxlint",
     "prepare": "husky install && rm -rf dist && npm run build",
-    "precommit": "lint-staged",
-    "preversion": "npm run docs && git add docs",
-    "docs": "typedoc"
+    "precommit": "lint-staged"
   },
   "devDependencies": {
     "@tsconfig/strictest": "2.0.8",
@@ -43,8 +41,6 @@
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
     "oxlint-tsgolint": "0.23.0",
-    "typedoc": "0.28.19",
-    "typedoc-rhineai-theme": "1.2.0",
     "typescript": "6.0.3"
   }
 }
