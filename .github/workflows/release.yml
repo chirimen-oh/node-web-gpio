@@ -1,7 +1,16 @@
 name: release
 on:
-  push:
-    branches: ["master"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release type
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -23,6 +32,6 @@ jobs:
           git config --global user.email chirimen-oh@users.noreply.github.com
       - name: Publish
         run: |
-          npm version patch
+          npm version ${{ inputs.version }}
           git push --atomic --tags origin HEAD
           npm publish

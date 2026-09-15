@@ -33,6 +33,9 @@
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged"
   },
+  "dependencies": {
+    "epoll": "^4.0.2"
+  },
   "devDependencies": {
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "25.9.5",
