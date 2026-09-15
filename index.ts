@@ -357,16 +357,13 @@ export class GPIOPort extends EventEmitter {
     const risingEnabled = edge === "both" || edge === "rising";
     const fallingEnabled = edge === "both" || edge === "falling";
 
+    await fs.writeFile(
+      path.join(SysfsGPIOPath, this.portName, "active_low"),
+      options?.activeLow ? "1" : "0",
+    );
     await fs.writeFile(path.join(SysfsGPIOPath, this.portName, "edge"), edge);
 
-    if (options?.activeLow !== undefined) {
-      await fs.writeFile(
-        path.join(SysfsGPIOPath, this.portName, "active_low"),
-        options.activeLow ? "1" : "0",
-      );
-    }
-
-    this.#fileHandle = await fs.open(path.join(SysfsGPIOPath, this.portName, "value"), "r+");
+    this.#fileHandle = await fs.open(path.join(SysfsGPIOPath, this.portName, "value"), "r");
 
     const buffer = Buffer.alloc(16);
     const readValue = (): GPIOValue => {
@@ -390,7 +387,11 @@ export class GPIOPort extends EventEmitter {
     const notifyDebounced = debounceMs > 0 ? debounce(notify, debounceMs) : notify;
 
     this.#epoll = new Epoll((error) => {
-      if (error) return;
+      if (error) {
+        this.emit("error", error);
+        void this.#unwatch();
+        return;
+      }
       readValue(); // レベルトリガーの割り込みをクリアする
       notifyDebounced();
     });

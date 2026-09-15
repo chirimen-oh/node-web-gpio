@@ -2,6 +2,9 @@
 
 GPIO access with Node.js
 
+> [!NOTE]
+> Linux only. This library uses the sysfs GPIO interface (`/sys/class/gpio`) and the native `epoll` addon for hardware interrupts, neither of which exist on Windows/macOS.
+
 ## Usage
 
 ```
