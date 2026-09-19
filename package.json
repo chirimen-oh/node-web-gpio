@@ -1,6 +1,6 @@
 {
   "name": "node-web-gpio",
-  "version": "1.1.81",
+  "version": "2.0.0-beta.0",
   "description": "GPIO access with Node.js",
   "keywords": [
     "gpio",
@@ -20,10 +20,13 @@
   "author": "Kohei Watanabe <nebel@fogtype.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chirimen-oh/node-web-gpio.git"
+    "url": "git+https://github.com/chirimen-oh/node-web-gpio.git"
   },
   "files": [
     "dist/*"
+  ],
+  "os": [
+    "linux"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,6 +35,9 @@
     "lint": "oxlint",
     "prepare": "husky install && rm -rf dist && npm run build",
     "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "epoll": "^4.0.2"
   },
   "devDependencies": {
     "@tsconfig/strictest": "2.0.8",
