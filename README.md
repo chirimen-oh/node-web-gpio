@@ -59,4 +59,7 @@ Since this relies on the native `epoll` package, a build toolchain (e.g. `build-
 ## Reference
 
 - [Web GPIO API for W3C Draft](http://browserobo.github.io/WebGPIO)
-- [node-web-gpio-onoff](https://github.com/satakagi/node-web-gpio-onoff) — the epoll-based interrupt-driven approach this library's `onchange` handling is based on
+
+## Acknowledgments
+
+- [node-web-gpio-onoff](https://github.com/satakagi/node-web-gpio-onoff) by [@satakagi](https://github.com/satakagi). This library's `onchange` handling is based on its epoll-based interrupt-driven approach.
